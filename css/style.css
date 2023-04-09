@@ -13,7 +13,6 @@
   background-color: #53b3fa;
 }
 body {
-  background-image: url("https://i.loli.net/2020/05/18/6HPEpdzuaBQsGIT.png");
   font-size: 1.25rem;
   letter-spacing: 0.5px;
   color: #34495e;
@@ -35,7 +34,7 @@ body {
 .header {
   height: 500px;
   font-family: Lato;
-  background: url("https://i.loli.net/2019/07/12/5d288d4b4a6a412359.jpg") -266px -172px;
+  background: url("https://muwinds.github.io/images/_MG_9141.jpg") -266px -172px;
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -243,7 +242,7 @@ body {
   align-items: center;
   text-align: center;
   font-family: Lato;
-  background: url("https://i.loli.net/2019/07/12/5d288d4b4a6a412359.jpg") -20px 330px;
+  background: url("https://muwinds.github.io/images/_MG_9141.jpg") -20px 330px;
   font-size: 18px;
   font-weight: bold;
   color: #fff;
