@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scaleable=0" name="viewport">
+	<title>沐风的博客</title>
+	
+<link rel="stylesheet" href="/css/style.css">
+
+	
+<link rel="stylesheet" href="/css/third%20party/jquery.fancybox.css">
+
+	<link rel="icon" href="/images/avatar.gif">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<meta name="generator" content="Hexo 6.3.0"></head>
+	<body>
+		<header class="header">
+	<div class="header_top">
+		<span class="theme">
+			<a href="/">
+				沐风的博客
+			</a>	
+		</span>
+		<nav class="navbar">
+			<ul class="menu">
+				
+					<li class="menu-item">
+						<i class="fa fa-"></i>
+						<a href="/" class="menu-item-link">
+							HOME
+						</a>
+					</li>
+				
+					<li class="menu-item">
+						<i class="fa fa-"></i>
+						<a href="/categories" class="menu-item-link">
+							CATEGORIES
+						</a>
+					</li>
+				
+					<li class="menu-item">
+						<i class="fa fa-"></i>
+						<a href="/archives" class="menu-item-link">
+							ARCHIVES
+						</a>
+					</li>
+				
+					<li class="menu-item">
+						<i class="fa fa-"></i>
+						<a href="/tags" class="menu-item-link">
+							TAGS
+						</a>
+					</li>
+				
+					<li class="menu-item">
+						<i class="fa fa-"></i>
+						<a href="/about" class="menu-item-link">
+							ABOUT
+						</a>
+					</li>
+					
+			</ul>
+		</nav>
+	</div>
+	<i id="homelink" data-link="https://MuWinds.github.io/"></i>
+	<div class="header_bottom">
+		<div class="blog-title">
+			<a target="_blank" rel="noopener" href="https://github.com/Chorer/hexo-theme-PureBlue" class="logo">沐风的博客</a>
+			<div class="descrs">
+				<div class="descr">"生如夏花之绚烂，死如秋叶之静美"</div>
+			</div>
+			<div class="blog-down">
+				<a href="javascript:void(0);">
+					<i class="fa fa-angle-double-down fa-2x"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+</header>
+
+		<main class="main">
+			<section class="posts">
+	<article class="post_full"> 
+	<h1 class="post-title">
+		<div class="post-title-link">
+			PVE双网口
+		</div>
+	</h1>
+	
+	<div class="post-info">
+		<div class="post-date">
+				<i class="fa fa-calendar"></i>&nbsp2023-04-09&nbsp&nbsp&nbsp
+		</div>
+		
+				<span class="post-words">
+					<i class="fa fa-pencil-square-o"></i>&nbsp511&nbspwords&nbsp&nbsp
+				</span>
+				<span class="post-time">
+					<i class="fa fa-clock-o"></i>&nbsp1 mins&nbsp&nbsp&nbsp
+				</span>
+		
+		<div class="post-tags">
+			
+		</div>
+	</div>
+	<div class="post-content">
+		<p>由于新三的科学能力太差（属实没想到一科学就卡），故打算自组一台软路由，顺便弄成了一台all in one<br>拓补图：  </p>
+<p><img src="/images/pasted-0.png"></p>
+<p>（随手画了个 你看着难受跟我有啥关系）</p>
+<p>机器被奸商城老板坑了，600块整了个e5 2630l+x79寨板，是纯纯的冤种</p>
+<p>这个板子寨到我插亮机卡之后就没地儿给我插网卡了，真尼玛无语</p>
+<p>找老板要了个usb转rj45网卡，不要问为啥不m2转pcie，价格是真的难顶</p>
+<p>反正家里也就100M的宽带，不在乎了，真扩到1000M也肯定有钱换机器了（看到这里打算直通的伙计可以退出了，在千兆环境下其实直通与否影响不大，机器性能差建议直通）</p>
+<p>安装pve也很简单，百度也都有教程，这里设置IP为：10.0.0.2，网关设置为：10.0.0.1</p>
+<p>然后将你要设置的lan口插旁路由（原来的硬路由），设置旁路由后台地址为：10.0.0.1，方便电脑管理</p>
+<p>访问后台，开一台openwrt的机器，镜像下载：<a target="_blank" rel="noopener" href="https://t.me/openwrt_p">https://t.me/openwrt_p</a></p>
+<p>先上传镜像到PVE，再将镜像直接挂pve下，指令：<br><code>qm importaldisk 虚拟机ID /var/lib/vz/temlate/iso/openwrt镜像文件名 local -lvm </code><br>然后两个网口全部桥接，设置一下启动顺序和开机自启，启动openwrt</p>
+<p>等控制台搁那不动了，直接按回车进入命令行模式</p>
+<p>修改&#x2F;etc&#x2F;config&#x2F;network，将lan口地址改为：10.0.0.1，此时将电脑插软路由上，插旁路由的wan口改插到软路由上</p>
+<p>电脑进入后台，账号：root，密码：password</p>
+<p>将wan口那里拨号，测试电脑能否上网，若能正常上网，则将电脑插回旁路由，软路由lan口接在旁路由wan口并修改旁路由的网关使得两个网关不冲突可以互相访问。</p>
+<p>接下来就可以奔放了！</p>
+
+	</div>
+	<div class="post-nav">
+		<div class="post-nav-prev">
+				
+		</div>
+		<div class="post-nav-next">
+					
+						<a href="/2023/04/09/hello-world/" rel="next" title="Hello World">
+							Hello World&nbsp<i class="fa fa-angle-double-right"></i>
+						</a>
+				  	
+			</div>
+			<div class="clear"></div>
+	</div>		
+</article>
+
+<div class="post-toc">
+	<div class="toc-top">
+		Article Catalog
+	</div>
+	
+</div>
+
+
+
+
+
+
+
+
+</section>	
+
+		</main>
+		<footer class="footer">
+	<div class="footer-info">
+		<p>
+			Copyright © 2018 - 2019 My Blog
+		</p>
+		<p class="a">
+			Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">Hexo</a> | Theme - <a target="_blank" rel="noopener" href="https://github.com/Chorer/hexo-theme-PureBlue">PureBlue</a>
+		</p> 
+	</div>
+</footer>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script src="/js/navbar.js"></script>
+
+
+<script src="/js/pace.min.js"></script>
+
+
+<script src="/js/code.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/post-except.js"></script>
+
+
+	
+<script src="/js/jquery.fancybox.js"></script>
+
+	
+<script src="/js/jquery.fancyboxStart.js"></script>
+
+	
+		
+<script src="/js/toc.js"></script>
+
+		
+<script src="/js/jquery.toTop.js"></script>
+
+	
+
+
+	<script src="https://unpkg.com/vanilla-back-to-top@7.2.0/dist/vanilla-back-to-top.min.js"></script>
+	
+<script src="/js/IndexToTop.js"></script>
+
+
+
+	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid="></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</body>	
+</html>	
