@@ -45,6 +45,12 @@
   <nav class="site-navigation">
     <ul>
       
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+        <li><a href="/categories">Categories</a></li>
+      
     </ul>
   </nav>
 </header>
@@ -75,23 +81,10 @@
   <div class="article-content">
     <div class="entry">
       
-        <p>由于新三的科学能力太差（属实没想到一科学就卡），故打算自组一台软路由，顺便弄成了一台all in one<br>拓补图：  </p>
-<p><img src="/images/pasted-0.png"></p>
-<p>（随手画了个 你看着难受跟我有啥关系）</p>
-<p>机器被奸商城老板坑了，600块整了个e5 2630l+x79寨板，是纯纯的冤种</p>
-<p>这个板子寨到我插亮机卡之后就没地儿给我插网卡了，真尼玛无语</p>
-<p>找老板要了个usb转rj45网卡，不要问为啥不m2转pcie，价格是真的难顶</p>
-<p>反正家里也就100M的宽带，不在乎了，真扩到1000M也肯定有钱换机器了（看到这里打算直通的伙计可以退出了，在千兆环境下其实直通与否影响不大，机器性能差建议直通）</p>
-<p>安装pve也很简单，百度也都有教程，这里设置IP为：10.0.0.2，网关设置为：10.0.0.1</p>
-<p>然后将你要设置的lan口插旁路由（原来的硬路由），设置旁路由后台地址为：10.0.0.1，方便电脑管理</p>
-<p>访问后台，开一台openwrt的机器，镜像下载：<a target="_blank" rel="noopener" href="https://t.me/openwrt_p">https://t.me/openwrt_p</a></p>
-<p>先上传镜像到PVE，再将镜像直接挂pve下，指令：<br><code>qm importaldisk 虚拟机ID /var/lib/vz/temlate/iso/openwrt镜像文件名 local -lvm </code><br>然后两个网口全部桥接，设置一下启动顺序和开机自启，启动openwrt</p>
-<p>等控制台搁那不动了，直接按回车进入命令行模式</p>
-<p>修改&#x2F;etc&#x2F;config&#x2F;network，将lan口地址改为：10.0.0.1，此时将电脑插软路由上，插旁路由的wan口改插到软路由上</p>
-<p>电脑进入后台，账号：root，密码：password</p>
-<p>将wan口那里拨号，测试电脑能否上网，若能正常上网，则将电脑插回旁路由，软路由lan口接在旁路由wan口并修改旁路由的网关使得两个网关不冲突可以互相访问。</p>
-<p>接下来就可以奔放了！</p>
-
+        <p>由于新三的科学能力太差（属实没想到一科学就卡），故打算自组一台软路由，顺便弄成了一台all in one   </p>
+        
+          <p><a class="excerpt-btn" href="/2023/04/09/PVE双网口/"><span>...More</span></a></p>
+        
       
     </div>
 
@@ -107,64 +100,6 @@
       <i class="icon-categories"></i>
         <a href="/categories/运维/">运维</a>
     </span>
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2023/04/09/hello-world/"><span>Hello World</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2023/04/09/hello-world/" rel="bookmark">
-        <time class="entry-date published" datetime="2023-04-09T11:19:56.534Z">
-          2023-04-09
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
     
 
     
