@@ -12,10 +12,7 @@
   
   <meta name="description" content="vwo50.com部署上线以来有70个人在里面求v了一波50
 这几天把服务器从azure迁到all in one，部署上线发现个问题
-就是原先的donate短链接打不开，随机到的短链接刷新之后失效
-问了一下技术老哥：
-谷歌了一下，解决方法贴下面吧：
-123location / &amp;#123;  try">
+就是原先的donate短链接打不开，随机到的短链接刷新之后失效">
   
 
   
@@ -92,7 +89,9 @@
       
         <p>vwo50.com部署上线以来有70个人在里面求v了一波50</p>
 <p>这几天把服务器从azure迁到all in one，部署上线发现个问题</p>
-<p>就是原先的donate短链接打不开，随机到的短链接刷新之后失效</p>
+<p>就是原先的donate短链接打不开，随机到的短链接刷新之后失效  </p>
+<span id="more"></span> 
+
 <p>问了一下技术老哥：</p>
 <p><img src="/images/pasted-2.png"><br>谷歌了一下，解决方法贴下面吧：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">  try_files $uri $uri/ /index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

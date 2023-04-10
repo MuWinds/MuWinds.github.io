@@ -82,17 +82,10 @@
     <div class="entry">
       
         <p>封面的缩略图是我亲自拍的 直出</p>
-<p>这趟颐和园逛得很值，初中游颐和园属实没想到只逛到长廊就原路返回了，那时候包含对学校其他事情的一些怨念，就决定我以后一定要自己游一次颐和园</p>
-<p>正好一个在海淀离颐和园近的朋友约我线下见面，趁这时候去颐和园咯。</p>
-<p>早上四点半起床骑车，骑到颐和园要一个小时左右？</p>
-<p>然后在附近转了一圈，见到了清华也见到了北大（手机给我双清了 数据没了呜呜呜），下午去看了中关村（感到唏嘘，海龙也没了，现在就剩下科贸了，科贸现在还只有2层卖电子，而且还是假货一堆）</p>
-<p>不多说了，放颐和园的图片吧，看到那一大片的莲花心情超级好的！</p>
-<p><img src="/images/pasted-3.png"></p>
-<p><img src="/images/pasted-4.png"></p>
-<p><img src="/images/pasted-5.png"></p>
-<p><img src="/images/pasted-6.png"></p>
-<p><img src="/images/pasted-7.png"></p>
-
+<p>这趟颐和园逛得很值，初中游颐和园属实没想到只逛到长廊就原路返回了，那时候包含对学校其他事情的一些怨念，就决定我以后一定要自己游一次颐和园  </p>
+        
+          <p><a class="excerpt-btn" href="/2023/04/10/颐和园-7月16/"><span>...More</span></a></p>
+        
       
     </div>
 
@@ -139,12 +132,10 @@
       
         <p>vwo50.com部署上线以来有70个人在里面求v了一波50</p>
 <p>这几天把服务器从azure迁到all in one，部署上线发现个问题</p>
-<p>就是原先的donate短链接打不开，随机到的短链接刷新之后失效</p>
-<p>问了一下技术老哥：</p>
-<p><img src="/images/pasted-2.png"><br>谷歌了一下，解决方法贴下面吧：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">  try_files $uri $uri/ /index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用方法：nginx前端配置文件插一段这个就可以了</p>
-
+<p>就是原先的donate短链接打不开，随机到的短链接刷新之后失效  </p>
+        
+          <p><a class="excerpt-btn" href="/2023/04/10/vue-react-spa页面刷新404解决/"><span>...More</span></a></p>
+        
       
     </div>
 
@@ -190,34 +181,10 @@
     <div class="entry">
       
         <p>以前都是windows 现在把朋友的MC服务器换到all in one上打算用centos配，主要是以下几个原因：</p>
-<p>一个是本人的centos手艺日益精巧，感觉自己有能力，还有一个是windows这些年来占用越来越多，换到centos看看能不能改善一下占用。</p>
-<p>考虑到如果纯命令行还要配ftp screen挂等一系列问题，打算这次采用mcsm面板</p>
-<p>先快速安装并上传服务端：  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -qO- https://gitee.com/mcsmanager/script/raw/master/setup.sh | bash</span><br></pre></td></tr></table></figure>
-<p>然后安装一下zulu</p>
-<blockquote>
-<p>Azul，主要是由于Zing，Zing是其研发的一种JAVA虚拟机，它具有更好的性能，无停顿，更快的启动等优势，不过是收费的，于是我想Azul有没有其它不收费的开源的JDK可以供开发者学习，于是找到了Zulu。<br>Zulu是什么？ 它是Azul提供商业支持的OpenJDK商业发行版,与Oracle JDK有高度的一致性，不过也有开源版本，可在官网下载学习<br>作者：siweidetu<br>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b29a8b172622">https://www.jianshu.com/p/b29a8b172622</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
-</blockquote>
-<p>安装zulu的指令：  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install -y libX11 libXext libXi libXrender libXtst alsa-lib;</span><br><span class="line">wget  <span class="comment">#java17</span></span><br><span class="line">wget https://cdn.azul.com/zulu/bin/zulu8.58.0.13-ca-jdk8.0.312-linux.x86_64.rpm <span class="comment">#java8</span></span><br><span class="line">rpm -ivh zulu17.36.13-ca-jdk17.0.4-linux.x86_64.rpm <span class="comment">#java17</span></span><br><span class="line">rpm -ivh zulu8.58.0.13-ca-jdk8.0.312-linux.x86_64.rpm <span class="comment">#java8</span></span><br></pre></td></tr></table></figure>
-<p>然后输入java看看出不出命令提示</p>
-<p>最后去mcsm开服</p>
-<p>这里说一下 如果是all in one开服 大多数人家里都是需要内网穿透才能让朋友进服务器</p>
-<p>大多数内网穿透对于MC都有一个致命缺点，就是因为代理协议的问题使得玩家进服IP全部为127.0.0.1（或者你上层反代地址），这使得在服务器遭遇假人攻击时比较难防御</p>
-<p>以及大多数内网穿透并没有心跳包功能，所以连接也不会特别稳定，掉线肯定常事儿，同时对于开了geyser双通的服主来说，java和基岩无法同一IP是比较难受的</p>
-<p>基于上面的，说一下内网穿透</p>
-<p>现在开源的内网穿透有很多源码可供选择，譬如：NPS Frp ngrok等等</p>
-<p>这里非常推荐frp，很多人说nps好配置图形化，实际上在上面的情况中nps根本没法胜任</p>
-<p>frp避免广告嫌疑，不推荐一些做frp的了，这里只说怎么配置</p>
-<p>我的服务器是双通，如果你的是仅java或者仅基岩，下面的你选择着来：  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[mc_tcp]</span><br><span class="line">type=tcp</span><br><span class="line">local_ip=127.0.0.1</span><br><span class="line">local_port=填写你的端口</span><br><span class="line">remote_port=填写你的端口</span><br><span class="line">use_encryption=false</span><br><span class="line">use_compression=true</span><br><span class="line">health_check_type = tcp</span><br><span class="line"># TCPing timeout seconds</span><br><span class="line">health_check_timeout_s = 3</span><br><span class="line"># If health check failed 3 times in a row, the proxy will be removed from frps</span><br><span class="line">health_check_max_failed = 3</span><br><span class="line"># A health check every 10 seconds</span><br><span class="line">health_check_interval_s = 10</span><br><span class="line">proxy_protocol_version = v2</span><br><span class="line"> </span><br><span class="line">[mc_udp]</span><br><span class="line">type=udp</span><br><span class="line">local_ip=127.0.0.1</span><br><span class="line">local_port=填写你的端口</span><br><span class="line">remote_port=填写你的端口</span><br><span class="line">use_encryption=false</span><br><span class="line">use_compression=true</span><br></pre></td></tr></table></figure>
-<p>以上的配置请注意几个问题</p>
-<p>如果你要双通端口一致，请填写内外网穿透一致的端口 假设local_port填写25565，你的remote_port也要填写25565，同时tcp和udp端口也要一致  </p>
-<p>接下来就是要配置bungeecord，<strong>配置bungeecord前请先修改好你的原来的服务器端口，不能和上面frp配置的端口一样</strong></p>
-<p>下载bungeecord，在mcsm再开个服务器，放入bungeecord，如果是双通请放入你的geyser和floodgate，启动bungeecord，并且关闭bungeecord的正版验证，配置好geyser和floodgate（geyser的be端口填udp的）并放入和子服一样的key.pem，同时Bungeecord要把proxy_protocol打开</p>
-<p>此时你原来的服务器就变成了Bungeecord下的子服，子服需要去spigot.yml打开bungeecord选项<br>再次进入服务器，你就会发现你的IP就变成真实的IP了，不再是原来的127.0.0.1了  </p>
-<p><img src="/images/pasted-1.png"></p>
-
+<p>一个是本人的centos手艺日益精巧，感觉自己有能力，还有一个是windows这些年来占用越来越多，换到centos看看能不能改善一下占用。  </p>
+        
+          <p><a class="excerpt-btn" href="/2023/04/10/centos7-9跑MC服务器/"><span>...More</span></a></p>
+        
       
     </div>
 
