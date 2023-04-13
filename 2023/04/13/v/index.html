@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hyper-v 配置 NAT + 端口映射 | 沐风的博客</title>
+
+  
+  <meta name="author" content="沐风">
+  
+
+  
+  <meta name="description" content="本指南将引导你完成：
+·创建 NAT 网络·将现有虚拟机连接到新网络·确认虚拟机正确连接">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Hyper-v 配置 NAT + 端口映射"/>
+
+  <meta property="og:site_name" content="沐风的博客"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="沐风的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">沐风的博客</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+        <li><a href="/friends">Friends</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Hyper-v 配置 NAT + 端口映射</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/04/13/v/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-04-13T11:29:35.000Z">
+          2023-04-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本指南将引导你完成：</p>
+<p>·创建 NAT 网络<br>·将现有虚拟机连接到新网络<br>·确认虚拟机正确连接</p>
+<span id="more"></span>
+
+<p>要求：</p>
+<p>·Windows 10 周年更新或更高版本<br>·已启用 Hyper-V（单击此处 查看相关说明） </p>
+<blockquote>
+<p>注意：目前，每台主机仅限一个 NAT 网络。 有关 Windows NAT (WinNAT) 实现、功能和限制的更多详细信息，请参考<a target="_blank" rel="noopener" href="https://techcommunity.microsoft.com/t5/Virtualization/Windows-NAT-WinNAT-Capabilities-and-limitations/ba-p/382303">WinNAT capabilities and limitations blog</a>（WinNAT 功能和限制日志）</p>
+</blockquote>
+<p>NAT 概述<br>NAT 使用主计算机的 IP 地址和端口通过内部 Hyper-V 虚拟开关向虚拟机授予对网络资源的访问权限。</p>
+<p>网络地址转换 (NAT) 是一种网络模式，旨在通过将一个外部 IP 地址和端口映射到更大的内部 IP 地址集来转换 IP 地址。 基本上，NAT 使用流量表将流量从一个外部（主机）IP 地址和端口号路由到与网络上的终结点（虚拟机、计算机和容器等）关联的正确内部 IP 地址</p>
+<p>此外，NAT 允许多个虚拟机托管需要相同（内部）通信端口的应用程序，方法是将它们映射到唯一的外部端口。</p>
+<p>出于所有这些原因，NAT 网络对于容器技术是很常见的（请参阅<a href="https://link.zhihu.com/?target=https://docs.microsoft.com/virtualization/windowscontainers/container-networking/architecture">容器网络</a>）</p>
+<h2 id="创建-NAT-虚拟网络"><a href="#创建-NAT-虚拟网络" class="headerlink" title="创建 NAT 虚拟网络"></a>创建 NAT 虚拟网络</h2><p>让我们演练新 NAT 网络的设置。</p>
+<p>以管理员身份打开 PowerShell 控制台。<br>创建内部交换机。  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">New-VMSwitch -SwitchName &quot;SwitchName&quot; -SwitchType Internal </span><br></pre></td></tr></table></figure>
+<p>查找刚创建的虚拟交换机的接口索引。<br>可以通过运行 <code>Get-NetAdapter</code> 来查找接口索引<br>你的输出应类似下面的形式：</p>
+<p><img src="/images/pasted-9.png"><br>1.内部交换机的名称将类似于 vEthernet (SwitchName)，接口描述将为 Hyper-V Virtual Ethernet Adapter。 请记下其 ifIndex 以便在下一步中使用。<br>2.使用 New-NetIPAddress 配置 NAT 网关。<br>下面是常规命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NetIPAddress -IPAddress &lt;NAT Gateway IP&gt; -PrefixLength &lt;NAT Subnet Prefix Length&gt; -InterfaceIndex &lt;ifIndex&gt; </span><br></pre></td></tr></table></figure>
+<p>若要配置网关，你将需要一些有关你的网络的信息：<br><strong>IPAddress - NAT 网关 IP</strong> 指定要用作 NAT 网关 IP 的 IPv4 或 IPv6 地址。<br>常规形式将为 a.b.c.1（例如 172.16.0.1）。 尽管最后一个位置不一定必须是.1，但通常是（基于前缀长度）<br>通用网关 IP 为 192.168.0.1<br><strong>PrefixLength – NAT 子网前缀长度定义的 NAT 本地子网大小（子网掩码）。</strong>子网前缀长度将介于 0 到 32 之间的一个整数值。<br>0 将映射整个 Internet，32 则只允许一个映射的 IP。 常用值范围从 24 到 12，具体要取决于多少 IP 需要附加到 NAT。<br>常用 PrefixLength 为 24 – 这是子网掩码 255.255.255.0<br><strong>InterfaceIndex – ifIndex</strong> 是你在上一步中确定的虚拟交换机的接口索引。  </p>
+<p>您可以运行以下内容来创建 NAT 网关：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">New-NetIPAddress -IPAddress 192.168.0.1 -PrefixLength 24 -InterfaceIndex 24 </span><br></pre></td></tr></table></figure>
+
+<p>使用 New-NetNat 配置 NAT 网络。<br>下面是常规命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">New-NetNat -Name &lt;NATOutsideName&gt; -InternalIPInterfaceAddressPrefix &lt;NAT subnet prefix&gt; </span><br></pre></td></tr></table></figure>
+<p>若要配置网关，你将需要提供一些有关网络和 NAT 网关的信息：<br><strong>Name - NATOutsideName</strong> 描述 NAT 网络的名称。 将使用此参数删除 NAT 网络。<br><strong>InternalIPInterfaceAddressPrefix</strong> - NAT 子网前缀同时描述上述 NAT 网关 IP 前缀和上述 NAT 子网前缀长度。<br>常规形式将为 a.b.c.0&#x2F;NAT 子网前缀长度<br>综上所述，对于本示例，我们将使用 192.168.0.0&#x2F;24</p>
+<p>对于我们的示例，运行以下命令以设置 NAT 网络：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">New-NetNat -Name MyNATnetwork -InternalIPInterfaceAddressPrefix 192.168.0.0/24 </span><br></pre></td></tr></table></figure>
+<p>恭喜！ 你现在已拥有一个虚拟 NAT 网络！ 若要向 NAT 网络添加虚拟机，请<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/virtualization/hyper-v-on-windows/user-guide/setup-nat-network%23connect-a-virtual-machine">点击这里</a>进行操作。  </p>
+<h3 id="连接虚拟机"><a href="#连接虚拟机" class="headerlink" title="连接虚拟机"></a>连接虚拟机</h3><p>若要将虚拟机连接到新的 NAT 网络，请使用“VM 设置”菜单将你在 NAT 网络设置部分的第一步中创建的内部交换机连接到虚拟机。</p>
+<p>由于 WinNAT 本身不会将 IP 地址分配给某个终结点（例如，VM），因此，你将需要从 VM 内手动完成此操作，即设置 NAT 内部前缀范围内的 IP 地址、设置默认网关 IP 地址，以及设置 DNS 服务器信息。 唯一需要注意的是终结点何时连接到容器。 在这种情况下，主机网络服务 (HNS) 分配并使用主机计算服务 (HCS) 直接向容器分配 IP 地址、网关 IP 和 DNS 信息。</p>
+<h2 id="配置示例：将-VM-和容器连接到-NAT-网络"><a href="#配置示例：将-VM-和容器连接到-NAT-网络" class="headerlink" title="配置示例：将 VM 和容器连接到 NAT 网络"></a>配置示例：将 VM 和容器连接到 NAT 网络</h2><p><em>如果你需要将多个 VM 和容器连接到单个 NAT，则需要确保 NAT 内部子网前缀大小足以包含由不同的应用程序或服务（例如用于 Windows 的 Docker 和 Windows 容器 – HNS）分配的 IP 范围。 这将需要应用程序级别的 IP 分配和网络配置，或者必须由管理员完成手动配置，从而保证不会在同一主机上重用现有 IP 分配。</em>  </p>
+<h3 id="用于-Windows-的-Docker（Linux-VM）和-Windows-容器"><a href="#用于-Windows-的-Docker（Linux-VM）和-Windows-容器" class="headerlink" title="用于 Windows 的 Docker（Linux VM）和 Windows 容器"></a>用于 Windows 的 Docker（Linux VM）和 Windows 容器</h3><p>下面的解决方案将允许用于 Windows 的 Docker（运行 Linux 容器的 Linux VM）和 Windows 容器使用单独的内部 vSwitch 共享同一个 WinNAT 实例。 Linux 和 Windows 容器之间的连接将起作用。</p>
+<p>用户已通过名为“VMNAT”的内部 vSwitch 将 VM 连接到 NAT 网络，现在想要使用 Docker 引擎安装 Windows 容器功能  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PS C:\&gt; Get-NetNat “VMNAT”| Remove-NetNat (this will remove the NAT but keep the internal vSwitch).</span><br><span class="line">Install Windows Container Feature</span><br><span class="line">DO NOT START Docker Service (daemon)</span><br><span class="line">Edit the arguments passed to the docker daemon (dockerd) by adding –fixed-cidr=&lt;container prefix&gt; parameter. This tells docker to create a default nat network with the IP subnet &lt;container prefix&gt; (e.g. 192.168.1.0/24) so that HNS can allocate IPs from this prefix.</span><br><span class="line">PS C:\&gt; Start-Service Docker; Stop-Service Docker</span><br><span class="line">PS C:\&gt; Get-NetNat | Remove-NetNAT (again, this will remove the NAT but keep the internal vSwitch)</span><br><span class="line">PS C:\&gt; New-NetNat -Name SharedNAT -InternalIPInterfaceAddressPrefix &lt;shared prefix&gt;</span><br><span class="line">PS C:\&gt; Start-Service docker</span><br></pre></td></tr></table></figure>
+<p>Docker&#x2F;HNS 将 IP 分配给 Windows 容器，管理员将 IP 分配给这两个的差异集的 VM。</p>
+<p>用户已通过运行 docker 引擎安装了 Windows 容器功能，现在想要将 VM 连接到 NAT 网络  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PS C:\&gt; Stop-Service docker</span><br><span class="line">PS C:\&gt; Get-ContainerNetwork | Remove-ContainerNetwork -force</span><br><span class="line">PS C:\&gt; Get-NetNat | Remove-NetNat (this will remove the NAT but keep the internal vSwitch)</span><br><span class="line">Edit the arguments passed to the docker daemon (dockerd) by adding -b “none” option to the end of docker daemon (dockerd) command to tell docker not to create a default NAT network.</span><br><span class="line">PS C:\&gt; New-ContainerNetwork –name nat –Mode NAT –subnetprefix &lt;container prefix&gt; (create a new NAT and internal vSwitch – HNS will allocate IPs to container endpoints attached to this network from the &lt;container prefix&gt;)</span><br><span class="line">PS C:\&gt; Get-Netnat | Remove-NetNAT (again, this will remove the NAT but keep the internal vSwitch)</span><br><span class="line">PS C:\&gt; New-NetNat -Name SharedNAT -InternalIPInterfaceAddressPrefix &lt;shared prefix&gt;</span><br><span class="line">PS C:\&gt; New-VirtualSwitch -Type internal (attach VMs to this new vSwitch)</span><br><span class="line">PS C:\&gt; Start-Service docker</span><br></pre></td></tr></table></figure>
+<p>Docker&#x2F;HNS 将 IP 分配给 Windows 容器，管理员将 IP 分配给这两个的差异集的 VM。</p>
+<p>最终，你应该有两个内部 VM 开关以及在这两个开关之间共享的一个 NetNat。  </p>
+<h3 id="多个应用程序使用相同的-NAT"><a href="#多个应用程序使用相同的-NAT" class="headerlink" title="多个应用程序使用相同的 NAT"></a>多个应用程序使用相同的 NAT</h3><p><em>某些情况下需要多个应用程序或服务使用同一个 NAT。 在这种情况下，必须遵循以下工作流，以便多个应用程序&#x2F;服务可以使用更大的 NAT 内部子网前缀</em></p>
+<p><em><strong>我们将以与 Windows 容器功能共存于同一主机上的 Docker 4 Windows - Docker Beta - Linux VM 作为示例，对其进行详细介绍。 此工作流可能会随时发生变化</strong></em></p>
+<blockquote>
+<p>C:&gt; net stop docker<br>停止 Docker4Windows MobyLinux VM<br>PS C:&gt; Get-ContainerNetwork | Remove-ContainerNetwork -force<br>PS C:&gt; Get-NetNat | Remove-NetNat<br>删除任何先前存在的容器网络（即删除 vSwitch、删除 NetNat、清理）<br>New-ContainerNetwork -Name nat -Mode NAT –subnetprefix 10.0.76.0&#x2F;24<br>（此子网将用于 Windows 容器功能）创建名为 nat 的内部 vSwitch<br>创建名为“nat”、IP 前缀为 10.0.76.0&#x2F;24 的 NAT 网络<br>Remove-NetNAT<br>删除 DockerNAT 和 nat NAT 网络（保留内部 vSwitch）<br>New-NetNat -Name DockerNAT -InternalIPInterfaceAddressPrefix 10.0.0.0&#x2F;17<br>（这将创建较大的 NAT 网络，以供 D4W 和容器共享）<br>创建名为“DockerNAT”的 NAT 网络，且该网络采用较大的前缀 10.0.0.0&#x2F;17<br>运行 Docker4Windows (MobyLinux.ps1)<br>创建内部 vSwitch DockerNAT<br>创建名为“DockerNAT”、IP 前缀为 10.0.75.0&#x2F;24 的 NAT 网络<br>Net start docker<br>Docker 将使用用户定义的 NAT 网络作为默认网络连接到 Windows 容器</p>
+</blockquote>
+<p>最终，你将具有两个内部 vSwitch – 一个名为 DockerNAT，另一个名为 nat。 你仅将拥有一个 NAT 网络 (10.0.0.0&#x2F;17)，可通过运行 Get-NetNat 确认。 Windows 容器的 IP 地址将由 Windows 主机网络服务 (HNS) 从 10.0.76.0&#x2F;24 子网分配。 基于现有 MobyLinux.ps1 脚本，将从 10.0.75.0&#x2F;24 子网分配 Docker 4 Windows 的 IP 地址。</p>
+<h3 id="配置端口映射"><a href="#配置端口映射" class="headerlink" title="配置端口映射"></a>配置端口映射</h3><p>1.先查看物理网卡的网络情况，ipconfig &#x2F;all<br>2.确认公网IP（既虚拟机共享上网的那个网卡的IP），私网IP（就是虚拟机nat桥接的那个IP）<br><code>netsh interface portproxy add v4tov4 listenport=外网端口 listenaddress=主IP connectaddress=私网IP connectport=私网IP端口</code></p>
+<p><img src="/images%5Cpasted-10.png"></p>
+<p>删除映射<br><code>netsh interface portproxy delete v4tov4 listenaddress=119.146.62.231 listenport=2022</code><br>查询端口映射情况<br><code>netsh interface portproxy show v4tov4</code></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2023 沐风
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
